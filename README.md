@@ -94,7 +94,7 @@ JSON 복원은 형식·날짜·숫자·계산값·파일 내 중복 ID를 검증
 
 빌드나 패키지 설치가 필요 없습니다. 상대 경로를 사용하므로 프로젝트 하위 URL에서도 동작합니다.
 
-배포 주소: <https://xunkaii.github.io/running/> (저장소 <https://github.com/xunkaii/running>, main 브랜치 루트). `.nojekyll`로 Jekyll 변환을 건너뜁니다. `test.cjs`와 `fixtures/`는 `.gitignore`로 제외해 이 폴더에만 둡니다. 파일을 고친 뒤에는 이 폴더에서 `git add -A`, `git commit -m "내용"`, `git push`를 실행하면 1~2분 뒤 사이트에 반영됩니다.
+배포 주소: <https://xunkaii.github.io/cali-running/> (저장소 <https://github.com/xunkaii/cali-running>, main 브랜치 루트). `.nojekyll`로 Jekyll 변환을 건너뜁니다. `test.cjs`와 `fixtures/`는 `.gitignore`로 제외해 이 폴더에만 둡니다. 파일을 고친 뒤에는 이 폴더에서 `git add -A`, `git commit -m "내용"`, `git push`를 실행하면 1~2분 뒤 사이트에 반영됩니다.
 
 [공식 GitHub Pages 안내](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 
