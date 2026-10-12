@@ -30,7 +30,8 @@ function parse(text){let data;try{data=JSON.parse(text)}catch{fail('올바른 JS
  if(!data||data.schemaVersion!==1||data.initialized!==true||!Array.isArray(data.records)||data.records.length>10000)fail('지원하지 않는 백업 형식입니다.');
  const records=data.records.map(validateRecord),ids=new Set();for(const r of records){if(ids.has(r.id))fail('파일에 중복 ID가 있습니다.');ids.add(r.id)}return envelope(records);
 }
-function seeds(){return [record({id:'seed-2026-10-09',date:'2026-10-09',distance:2.71,durationSeconds:1704,averageHeartRate:149,maxHeartRate:163,cadence:163,calories:122,elevationGain:8}),record({id:'seed-2026-10-11',date:'2026-10-11',distance:2.65,durationSeconds:1527,averageHeartRate:172,maxHeartRate:181,cadence:150,calories:126,elevationGain:7})]}
+// First launch holds only the 10/9 reference run; the 10/11 run is entered from its NRC capture.
+function seeds(){return [record({id:'seed-2026-10-09',date:'2026-10-09',distance:2.71,durationSeconds:1704,averageHeartRate:149,maxHeartRate:163,cadence:163,calories:122,elevationGain:8})]}
 function load(storage){const value=storage.getItem(KEY);if(value!==null)return parse(value);const data=envelope(seeds());storage.setItem(KEY,JSON.stringify(data));return data}
 function persist(storage,data){const clean=parse(JSON.stringify(data));storage.setItem(KEY,JSON.stringify(clean));return clean}
 function upsert(data,input){const previous=data.records.find(r=>r.id===input.id);const next=record(input,previous?previous.appliedFactor:FACTOR);return envelope([...data.records.filter(r=>r.id!==next.id),next])}
