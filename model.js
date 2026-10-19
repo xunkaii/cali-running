@@ -1,7 +1,8 @@
 /* Pure calculation and storage model; no dependencies. */
 (function(root){
 'use strict';
-const FACTOR=4.55/2.71, KEY='running-correction.records.v1';
+// Default for new records: pooled reference runs from 2026-10-09 and 2026-10-17.
+const FACTOR=(4.55+5.01)/(2.71+3.01), KEY='running-correction.records.v1';
 const optional=['averageHeartRate','maxHeartRate','cadence','calories','elevationGain'];
 function fail(message){throw new Error(message)}
 function dateValid(s){if(typeof s!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(s)||s<'0001-01-01')return false;const d=new Date(s+'T12:00:00Z');return Number.isFinite(+d)&&d.toISOString().slice(0,10)===s}
@@ -31,7 +32,7 @@ function parse(text){let data;try{data=JSON.parse(text)}catch{fail('올바른 JS
  const records=data.records.map(validateRecord),ids=new Set();for(const r of records){if(ids.has(r.id))fail('파일에 중복 ID가 있습니다.');ids.add(r.id)}return envelope(records);
 }
 // First launch holds only the 10/9 reference run; the 10/11 run is entered from its NRC capture.
-function seeds(){return [record({id:'seed-2026-10-09',date:'2026-10-09',distance:2.71,durationSeconds:1704,averageHeartRate:149,maxHeartRate:163,cadence:163,calories:122,elevationGain:8})]}
+function seeds(){return [record({id:'seed-2026-10-09',date:'2026-10-09',distance:2.71,durationSeconds:1704,averageHeartRate:149,maxHeartRate:163,cadence:163,calories:122,elevationGain:8},4.55/2.71)]}
 function load(storage){const value=storage.getItem(KEY);if(value!==null)return parse(value);const data=envelope(seeds());storage.setItem(KEY,JSON.stringify(data));return data}
 function persist(storage,data){const clean=parse(JSON.stringify(data));storage.setItem(KEY,JSON.stringify(clean));return clean}
 function upsert(data,input){const previous=data.records.find(r=>r.id===input.id);const next=record(input,previous?previous.appliedFactor:FACTOR);return envelope([...data.records.filter(r=>r.id!==next.id),next])}

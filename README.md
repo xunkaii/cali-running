@@ -73,7 +73,7 @@ GitHub Pages용 한국어 정적 웹앱. 서버·계정·외부 API·프레임�
 
 localStorage 키 `running-correction.records.v1`과 `{schemaVersion:1, initialized:true, records:[...]}` 구조를 유지합니다. 누적 결과나 레벨은 저장하지 않고 기록에서 매번 계산하므로 중복 합산되지 않습니다.
 
-각 기록의 id, date, distance, durationSeconds, appliedFactor, correctedDistance, correctedPace, averageHeartRate, maxHeartRate, cadence, calories, elevationGain, note를 유지합니다. 기본 계수 `4.55 / 2.71`은 새 기록에만 적용하며, 수정 시 기존 기록의 적용 계수를 유지합니다.
+각 기록의 id, date, distance, durationSeconds, appliedFactor, correctedDistance, correctedPace, averageHeartRate, maxHeartRate, cadence, calories, elevationGain, note를 유지합니다. 기본 계수 `(4.55 + 5.01) / (2.71 + 3.01)` (약 1.67133배)은 새 기록에만 적용하며, 수정 시 기존 기록의 적용 계수를 유지합니다. 10월 9일 초기 기록도 당시 계수 `4.55 / 2.71`을 유지합니다.
 
 저장 키가 없을 때만 10월 9일 초기 기록을 등록합니다. 이미 저장된 기록(이전 버전에서 생긴 10월 11일 초기 기록 포함)은 바꾸지 않습니다. 삭제된 초기 기록을 다시 만들지 않습니다. 기존 초기 ID에서 고도 속성 자체가 없을 때만 8m/7m를 보완하며, null·0·사용자 수정값은 유지합니다.
 
@@ -83,7 +83,7 @@ JSON 복원은 형식·날짜·숫자·계산값·파일 내 중복 ID를 검증
 
 ## 보정의 한계
 
-결과는 실제 거리를 확정하지 않는 추정치입니다. 2026-10-09 동일 경로의 두 기록을 비교한 임시 비율이며 비교 거리 4.55km 역시 독립 검증되지 않았습니다. 오차율이 일정하다는 가정이며 GPS 복원·기기 진단·NRC 기록 변경 기능은 없습니다.
+결과는 실제 거리를 확정하지 않는 추정치입니다. 2026-10-09(4.55km / 2.71km)와 2026-10-17(5.01km / 3.01km)의 비교 거리를 합산한 임시 비율이며 기준 거리 역시 독립 검증되지 않았습니다. 오차율이 일정하다는 가정이며 GPS 복원·기기 진단·NRC 기록 변경 기능은 없습니다.
 
 ## GitHub Pages 배포
 
@@ -100,7 +100,7 @@ JSON 복원은 형식·날짜·숫자·계산값·파일 내 중복 ID를 검증
 
 ## 검증
 
-`node test.cjs` — **127개 통과**.
+`node test.cjs` — **130개 통과**.
 
 계산·입력 검증, 초기 데이터 유지, 기록 추가·수정·삭제, 재로딩, JSON 왕복과 중복 처리, 가중 평균, 초기 고도 보완, 기간별 버킷, 한국 날짜 자정, 연말 주간 경계, 이전/다음 달·다음 해 누적 유지, 11월 5km 추가/삭제, 모든 레벨 경계, 진행률, 조회 시 데이터 불변, UI 이벤트를 검증합니다.
 
